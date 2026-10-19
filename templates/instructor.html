@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Panel de registros{% endblock %}
+{% block content %}
+<section class="instructor"><p class="eyebrow red">ACCESO DESDE EL EQUIPO SERVIDOR</p><h1>Registros de Super Mercado</h1><p>Consulta los eventos y los datos de ejemplo enviados desde el formulario.</p>
+<div class="steps"><article><span>{{ totals.get('enlace_corto', 0) }}</span><h2>Accesos al enlace corto</h2></article><article><span>{{ totals.get('visita', 0) }}</span><h2>Visitas al formulario</h2></article><article><span>{{ totals.get('envio_demo', 0) }}</span><h2>Envíos de prueba</h2></article></div>
+<div class="qr-card"><img src="{{ url_for('publico.qr') }}" alt="Código QR del enlace local" width="180" height="180"><div><h2>Acceso por enlace o QR</h2><a href="{{ lab_url }}">{{ lab_url }}</a><p>El QR usa esta misma URL. Para abrirlo desde un teléfono, configura la IP LAN al iniciar el servidor.</p><a href="{{ url_for('publico.qr') }}" download="qr-laboratorio.svg">Descargar QR (SVG)</a></div></div>
+<h2>Últimos 200 eventos</h2><p class="muted">Fechas en UTC. Cada recarga del formulario cuenta como visita; no son participantes únicos. Enlace y QR comparten destino y no se distinguen en el registro.</p><div class="table-wrap"><table><thead><tr><th>ID</th><th>Fecha UTC</th><th>Evento</th><th>Nombre ficticio</th><th>Teléfono ficticio</th><th>Correo ficticio</th></tr></thead><tbody>{% for row in rows %}<tr><td>{{ row.id }}</td><td>{{ row.fecha }}</td><td>{{ row.tipo }}</td><td>{{ row.nombre or '—' }}</td><td>{{ row.telefono or '—' }}</td><td>{{ row.correo or '—' }}</td></tr>{% else %}<tr><td colspan="6">Aún no hay eventos. Abre el formulario para comenzar.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

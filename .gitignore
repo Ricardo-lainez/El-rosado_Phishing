@@ -1,0 +1,20 @@
+.venv/
+__pycache__/
+data/
+artifacts/
+*.pyc
+
+# Configuracion privada y credenciales locales
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Datos y registros locales, aunque se creen fuera de data/
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.log

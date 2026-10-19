@@ -1,0 +1,5 @@
+﻿{% extends 'base.html' %}
+{% block title %}Registro recibido{% endblock %}
+{% block content %}
+<section class="result"><span class="success-icon">✓</span><p class="eyebrow red">SUPER MERCADO</p><h1>Recibimos tu formulario.</h1><p>Tus datos de ejemplo se guardaron correctamente en este servidor.</p><div class="learning"><h2>Gracias por completar el registro</h2><p>Puedes volver al formulario para enviar otro ejemplo. El administrador puede consultar los registros desde el panel local.</p></div><a class="button" href="{{ url_for('publico.index') }}">Volver al inicio</a></section>
+{% endblock %}

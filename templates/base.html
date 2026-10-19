@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Formulario de contacto{% endblock %} · Super Mercado</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="site">
+    <header><a class="brand" href="{{ url_for('publico.index') }}"><span>CERCA DE TI</span>SUPER MERCADO<small>Un espacio para conectar</small></a><div class="header-right"><span>EC · Español</span><span class="outline">Atención al cliente</span></div></header>
+    <nav aria-label="Navegación principal"><a href="{{ url_for('publico.index') }}">Inicio</a><a href="{{ url_for('publico.index') }}#contacto">Contacto</a><a href="{{ url_for('publico.index') }}#formulario">Formulario</a></nav>
+    <main>{% block content %}{% endblock %}</main>
+    <footer>Super Mercado · Formulario de contacto con datos de ejemplo.<br>Los envíos se guardan en este servidor para comprobar el funcionamiento del formulario.</footer>
+  </div>
+</body></html>
