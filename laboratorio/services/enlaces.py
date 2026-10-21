@@ -10,11 +10,15 @@ def validate_base_url(value):
     parsed = urlsplit(value)
     try:
         host = parsed.hostname
+        ip = ipaddress.ip_address(host) if host else None
         local = host == "localhost" or (
-            host and (ipaddress.ip_address(host).is_loopback or
-                      ipaddress.ip_address(host) in ipaddress.ip_network("10.0.0.0/8") or
-                      ipaddress.ip_address(host) in ipaddress.ip_network("172.16.0.0/12") or
-                      ipaddress.ip_address(host) in ipaddress.ip_network("192.168.0.0/16"))
+            ip and (ip.is_loopback or
+                    ip in ipaddress.ip_network("10.0.0.0/8") or
+                    ip in ipaddress.ip_network("172.16.0.0/12") or
+                    ip in ipaddress.ip_network("192.168.0.0/16") or
+                    ip in ipaddress.ip_network("26.0.0.0/8") or   # Radmin VPN
+                    ip in ipaddress.ip_network("25.0.0.0/8") or   # Hamachi
+                    ip in ipaddress.ip_network("100.64.0.0/10"))  # Tailscale
         )
         parsed.port
     except ValueError:

@@ -1,4 +1,4 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <section class="hero" id="contacto">
   <div><p class="eyebrow">BIENVENIDO A SUPER MERCADO</p><h1>Estamos más cerca.<br>Conectemos.</h1><p>Un formulario sencillo para completar tu registro y comprobar que tus datos de ejemplo se reciben correctamente.</p><a class="button light" href="#formulario">Completar formulario <span>→</span></a></div>
@@ -11,8 +11,8 @@
     <p class="eyebrow red">CONTACTO</p><h2>Completa tu registro</h2><p class="muted">Todos los campos son obligatorios. Usa datos de ejemplo.</p>
     {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
     <input type="hidden" name="csrf" value="{{ csrf_token() }}">
-    <label for="nombre">Nombre de ejemplo</label><input id="nombre" name="nombre" required minlength="10" maxlength="73" placeholder="Ejemplo Cliente" autocomplete="off" aria-describedby="nombre-help"><small class="muted small" id="nombre-help">Comienza con «Ejemplo » y añade el nombre que prefieras.</small>
-    <label for="telefono">Teléfono de ejemplo</label><input id="telefono" name="telefono" type="tel" required maxlength="10" pattern="000[0-9]{7}" placeholder="0001234567" autocomplete="off" aria-describedby="telefono-help"><small class="muted small" id="telefono-help">10 dígitos, empezando con 000.</small>
+    <label for="nombre">Nombre de ejemplo</label><input id="nombre" name="nombre" required minlength="10" maxlength="73" placeholder="Ejemplo Cliente" autocomplete="off" aria-describedby="nombre-help"><small class="muted small" id="nombre-help">Comienza con «Ejemplo » (admite tildes y caracteres en español).</small>
+    <label for="telefono">Teléfono de ejemplo</label><input id="telefono" name="telefono" type="tel" required maxlength="15" pattern="000[\s.\-()]?[0-9]{3}[\s.\-()]?[0-9]{4}" placeholder="0001234567" autocomplete="off" aria-describedby="telefono-help"><small class="muted small" id="telefono-help">10 dígitos, empezando con 000 (admite espacios o guiones).</small>
     <label for="correo">Correo de ejemplo</label><input id="correo" name="correo" type="email" required maxlength="77" placeholder="cliente@example.test" autocomplete="off" aria-describedby="correo-help"><small class="muted small" id="correo-help">Elige un alias de letras o números y usa @example.test.</small>
     <label for="confirmacion">Confirma el correo</label><input id="confirmacion" name="confirmacion" type="email" required maxlength="77" placeholder="cliente@example.test" autocomplete="off">
     <label class="checkbox"><input type="checkbox" name="consentimiento" value="si" required><span>Acepto que este servidor guarde los datos de ejemplo que envío para comprobar el funcionamiento del formulario.</span></label>

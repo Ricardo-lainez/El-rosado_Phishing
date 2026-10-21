@@ -59,7 +59,7 @@ class LabTests(unittest.TestCase):
         for url in ["https://example.com", "http://8.8.8.8", "http://192.168.1.2/otro", "http://localhost@evil.test"]:
             with self.assertRaises(ValueError):
                 validate_base_url(url)
-        for url in ["http://127.0.0.1:5000", "http://192.168.1.20:5000", "http://10.0.0.1:5000"]:
+        for url in ["http://127.0.0.1:5000", "http://192.168.1.20:5000", "http://10.0.0.1:5000", "http://26.61.122.108:5000"]:
             self.assertEqual(validate_base_url(url), url)
         _, path = prepare("http://192.168.1.20:5000", Path(self.temp.name) / "artifacts")
         msg = BytesParser(policy=policy.default).parsebytes(path.read_bytes())
