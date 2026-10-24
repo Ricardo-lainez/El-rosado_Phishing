@@ -4,6 +4,7 @@ from pathlib import Path
 
 from flask import Flask
 
+from laboratorio.controllers.auth import auth
 from laboratorio.controllers.instructor import instructor
 from laboratorio.controllers.publico import publico
 from laboratorio.models.eventos import EventModel
@@ -25,5 +26,6 @@ def create_app(database=None, base_url="http://127.0.0.1:5000"):
     app.extensions["eventos"] = model
     app.register_blueprint(publico)
     app.register_blueprint(instructor)
+    app.register_blueprint(auth)
     configure_web(app)
     return app

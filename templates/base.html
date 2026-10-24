@@ -7,8 +7,7 @@
 </head>
 <body>
   <div class="site">
-    <header><a class="brand" href="{{ url_for('publico.index') }}"><span>CERCA DE TI</span>SUPER MERCADO<small>Un espacio para conectar</small></a><div class="header-right"><span>EC · Español</span><span class="outline">Atención al cliente</span></div></header>
-    <nav aria-label="Navegación principal"><a href="{{ url_for('publico.index') }}">Inicio</a><a href="{{ url_for('publico.index') }}#contacto">Contacto</a><a href="{{ url_for('publico.index') }}#formulario">Formulario</a></nav>
+    <header><a class="brand" href="{{ url_for('publico.index') }}"><span>CERCA DE TI</span>SUPER MERCADO<small>Un espacio para conectar</small></a><div class="header-right"><span>EC · Español</span>{% if request.endpoint in ['auth.login_form', 'auth.login_submit'] %}<a class="outline" href="{{ url_for('publico.index') }}" style="text-decoration:none">Volver al inicio</a>{% else %}<a class="outline" href="{{ url_for('auth.login_form') }}" style="text-decoration:none">Iniciar sesión</a>{% endif %}</div></header>
     <main>{% block content %}{% endblock %}</main>
     <footer>Super Mercado · Formulario de contacto con datos de ejemplo.<br>Los envíos se guardan en este servidor para comprobar el funcionamiento del formulario.</footer>
   </div>

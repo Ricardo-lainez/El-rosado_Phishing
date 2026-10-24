@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="login-stage" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 90px 20px 70px; background: radial-gradient(circle at 50% 25%, #fce1e4 0%, #f7d5da 50%, #edd3cd 100%); box-sizing: border-box;">
+  <div class="login-card" style="position: relative; width: 100%; max-width: 410px; background: #ffffff; border-radius: 38px; padding: 68px 36px 38px; box-shadow: 0 25px 65px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.03); border: none; box-sizing: border-box;">
+
+    <!-- Avatar Floating Badge -->
+    <div class="avatar-badge" style="position: absolute; top: -46px; left: 50%; transform: translateX(-50%); width: 92px; height: 92px; border-radius: 50%; background: #ff0547; background: linear-gradient(145deg, #ff1a57, #ea0039); display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 28px rgba(234, 0, 57, 0.35), 0 6px 14px rgba(0, 0, 0, 0.08); z-index: 2;" aria-hidden="true">
+      <svg width="44" height="44" viewBox="0 0 64 64" fill="none" style="width: 44px; height: 44px; max-width: 44px; max-height: 44px; display: block;" xmlns="http://www.w3.org/2000/svg">
+        <!-- Head outline -->
+        <circle cx="32" cy="22" r="9" stroke="#ffffff" stroke-width="2.6" fill="none" />
+        <!-- Torso outline -->
+        <path d="M 16 46 C 16 36 23 33 32 33 C 41 33 48 36 48 46 L 16 46 Z" stroke="#ffffff" stroke-width="2.6" fill="none" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <!-- Error message if auth fails -->
+    {% if error %}
+    <div class="login-error" role="alert" id="login-error" style="background: #ffebee; border: 1px solid #ffcdd2; color: #b71c1c; border-radius: 9999px; padding: 10px 18px; font-size: 12px; text-align: center; margin-bottom: 18px; font-weight: 600;">
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- Login Form -->
+    <form method="post" action="{{ url_for('auth.login_submit') }}" id="login-form" autocomplete="off" style="margin: 0; padding: 0;">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+
+      <!-- Username input with user icon -->
+      <div class="pill-field" style="position: relative; display: flex; align-items: center; background: #e5e5e7; border-radius: 9999px; height: 52px; padding: 0 20px; margin-bottom: 16px; box-sizing: border-box;">
+        <svg width="18" height="18" viewBox="0 0 24 24" style="width: 18px; height: 18px; min-width: 18px; max-width: 18px; fill: #43444b; display: block; flex-shrink: 0;" aria-hidden="true">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        <input id="username" name="username" type="text" required maxlength="64"
+               placeholder="Username" autofocus aria-label="Username"
+               style="flex: 1; width: 100%; height: 100%; background: transparent; border: none; outline: none; box-shadow: none; padding: 0 0 0 14px; margin: 0; font-size: 14px; color: #2b2c34; font-family: inherit; box-sizing: border-box;">
+      </div>
+
+      <!-- Password input with lock icon -->
+      <div class="pill-field" style="position: relative; display: flex; align-items: center; background: #e5e5e7; border-radius: 9999px; height: 52px; padding: 0 20px; margin-bottom: 16px; box-sizing: border-box;">
+        <svg width="18" height="18" viewBox="0 0 24 24" style="width: 18px; height: 18px; min-width: 18px; max-width: 18px; fill: #43444b; display: block; flex-shrink: 0;" aria-hidden="true">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        <input id="password" name="password" type="password" required maxlength="128"
+               placeholder="************" aria-label="Password"
+               style="flex: 1; width: 100%; height: 100%; background: transparent; border: none; outline: none; box-shadow: none; padding: 0 0 0 14px; margin: 0; font-size: 14px; color: #2b2c34; font-family: inherit; box-sizing: border-box;">
+      </div>
+
+      <!-- Remember me & Forgot Password -->
+      <div class="options-row" style="display: flex; justify-content: space-between; align-items: center; margin: 16px 8px 24px; font-size: 12px; color: #9ea0aa; box-sizing: border-box; user-select: none;">
+        <label class="remember-label" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: #9ea0aa; font-size: 12px; margin: 0;">
+          <input type="checkbox" name="remember" checked style="width: 15px; height: 15px; border-radius: 3px; accent-color: #555761; cursor: pointer; margin: 0;">
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="forgot-link" style="color: #9ea0aa; text-decoration: none; font-style: italic; font-size: 12px;" onclick="event.preventDefault(); alert('Laboratorio: Usa las credenciales admin / L4b0rat0r10!');">Forgot Password?</a>
+      </div>
+
+      <!-- Submit Button -->
+      <button class="pill-button" type="submit" id="login-btn"
+              style="width: 100%; height: 54px; border-radius: 9999px; background: #ff0547; background: linear-gradient(135deg, #ff114e 0%, #ea0038 100%); color: #ffffff; border: none; outline: none; font-size: 14px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 24px rgba(255, 5, 71, 0.35); box-sizing: border-box;">
+        LOGIN
+      </button>
+    </form>
+  </div>
+
+  <!-- Subtle navigation helper -->
+  <div class="login-meta" style="margin-top: 26px; text-align: center; font-size: 12px; color: #8c8286;">
+    <a href="{{ url_for('publico.index') }}" style="color: #6d6669; text-decoration: none; font-weight: 600;">← Volver al formulario de registro</a>
+    <span class="hint" style="display: block; margin-top: 6px; font-size: 11px; color: #a4999e;">Laboratorio: <strong>admin</strong> &middot; <strong>L4b0rat0r10!</strong></span>
+  </div>
+</section>
+{% endblock %}
