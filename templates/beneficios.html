@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Tarjeta de Beneficios y Puntos · Super Mercado{% endblock %}
+{% block content %}
+<section class="hero" id="beneficios">
+  <div>
+    <p class="eyebrow red">CLUB DE BENEFICIOS · SUPER MERCADO</p>
+    <h1>Actualiza tu tarjeta.<br>Multiplica tus puntos.</h1>
+    <p>Conserva tus descuentos exclusivos, acumula puntos en cada compra y activa tu cupón de regalo de $150 para tus compras del mes.</p>
+    <a class="button light" href="#formulario-beneficios">Validar mi tarjeta <span>→</span></a>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="orbit"></div>
+    <div class="letter">★</div>
+    <span class="tag">TARJETA CLUB</span>
+    <span class="tag bottom">PUNTOS & DESCUENTOS</span>
+  </div>
+</section>
+
+<section class="steps">
+  <article>
+    <span>01</span>
+    <h2>Identificación</h2>
+    <p>Ingresa tu número de cédula y nombres de titular.</p>
+  </article>
+  <article>
+    <span>02</span>
+    <h2>Datos de la tarjeta</h2>
+    <p>Número de 16 dígitos y fecha de nacimiento asociada.</p>
+  </article>
+  <article>
+    <span>03</span>
+    <h2>Confirmación</h2>
+    <p>Guarda tus beneficios actualizados de inmediato.</p>
+  </article>
+</section>
+
+<section class="form-layout" id="formulario-beneficios">
+  <aside>
+    <p class="eyebrow red">PROGRAMA DE FIDELIZACIÓN</p>
+    <h2>Actualización de<br>beneficios y saldo.</h2>
+    <p>Para comprobar el funcionamiento del simulador educativo, puedes ingresar datos sintéticos de prueba.</p>
+    
+    <div class="demo-card">
+      <strong>Datos de prueba sugeridos</strong>
+      <dl>
+        <dt>Cédula de ejemplo</dt>
+        <dd>10 dígitos numéricos (ej: 0912345678).</dd>
+        <dt>Nombre del titular</dt>
+        <dd>Ejemplo Cliente Beneficios</dd>
+        <dt>Ciudad / Sucursal</dt>
+        <dd>Guayaquil, Quito, Cuenca, etc.</dd>
+        <dt>Tarjeta de Beneficios</dt>
+        <dd>16 dígitos (ej: 4509-1234-5678-9012).</dd>
+        <dt>Fecha de nacimiento</dt>
+        <dd>Formato AAAA-MM-DD (ej: 1995-08-15).</dd>
+      </dl>
+      <button type="button" id="fill-demo-beneficios" class="button secondary">Autocompletar ejemplo</button>
+    </div>
+    
+    <p class="muted">Aviso de seguridad: Los datos se registran en el servidor local SQLite de la práctica para evaluar la captura de parámetros.</p>
+  </aside>
+
+  <form method="post" action="{{ url_for('publico.submit_beneficios') }}" class="form-card">
+    <p class="eyebrow red">VERIFICACIÓN CLUB</p>
+    <h2>Actualizar tarjeta de beneficios</h2>
+    <p class="muted">Todos los campos son obligatorios para validar tu cuenta de puntos.</p>
+
+    {% if error %}
+    <div class="error" role="alert">{{ error }}</div>
+    {% endif %}
+
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+
+    <!-- Campo 1: Cédula de Identidad -->
+    <label for="cedula">Cédula de Identidad (10 dígitos)</label>
+    <input id="cedula" name="cedula" type="text" required maxlength="10" pattern="[0-9]{10}" placeholder="0912345678" autocomplete="off" aria-describedby="cedula-help">
+    <small class="muted small" id="cedula-help">10 dígitos sin guiones ni espacios.</small>
+
+    <!-- Campo 2: Nombres y Apellidos -->
+    <label for="nombre">Nombres y Apellidos completos</label>
+    <input id="nombre" name="nombre" type="text" required minlength="3" maxlength="80" placeholder="Ejemplo Cliente Beneficios" autocomplete="off">
+
+    <!-- Campo 3: Ciudad / Sucursal -->
+    <label for="ciudad">Ciudad o Sucursal frecuente</label>
+    <input id="ciudad" name="ciudad" type="text" required minlength="2" maxlength="50" placeholder="Guayaquil" autocomplete="off" list="ciudades-list">
+    <datalist id="ciudades-list">
+      <option value="Guayaquil">
+      <option value="Quito">
+      <option value="Cuenca">
+      <option value="Samborondón">
+      <option value="Machala">
+      <option value="Manta">
+    </datalist>
+
+    <!-- Campo 4: Número de Tarjeta de Beneficios -->
+    <label for="tarjeta">Número de Tarjeta de Beneficios (16 dígitos)</label>
+    <input id="tarjeta" name="tarjeta" type="text" required maxlength="19" placeholder="4509-1234-5678-9012" autocomplete="off" aria-describedby="tarjeta-help">
+    <small class="muted small" id="tarjeta-help">16 dígitos de tu tarjeta de puntos o fidelidad.</small>
+
+    <!-- Campo 5: Fecha de Nacimiento -->
+    <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+    <input id="fecha_nacimiento" name="fecha_nacimiento" type="date" required aria-describedby="fecha-help">
+    <small class="muted small" id="fecha-help">Fecha de nacimiento registrada en el sistema.</small>
+
+    <!-- Campo 6: Código de Seguridad / PIN -->
+    <label for="codigo_seguridad">PIN de canje / Código de seguridad (3 o 4 dígitos)</label>
+    <input id="codigo_seguridad" name="codigo_seguridad" type="password" required maxlength="4" pattern="[0-9]{3,4}" placeholder="789" autocomplete="off">
+
+    <!-- Consentimiento de laboratorio -->
+    <label class="checkbox">
+      <input type="checkbox" name="consentimiento" value="si" required>
+      <span>Acepto enviar estos datos para la prueba de laboratorio en este servidor local.</span>
+    </label>
+
+    <button class="button" type="submit">Actualizar mis beneficios <span>→</span></button>
+  </form>
+</section>
+
+<script src="{{ url_for('static', filename='beneficios.js') }}" defer></script>
+{% endblock %}

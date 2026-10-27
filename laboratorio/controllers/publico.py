@@ -1,5 +1,6 @@
 from flask import Blueprint, Response, abort, current_app, redirect, render_template, request, url_for
 
+from laboratorio.models.beneficios import is_valid_beneficios, normalize_beneficios
 from laboratorio.models.participacion import is_valid_participation, normalize_identity
 from laboratorio.services.enlaces import make_qr_svg
 from laboratorio.web import valid_csrf
@@ -32,11 +33,47 @@ def participate():
     return redirect(url_for("publico.finished"), code=303)
 
 
+@publico.get("/beneficios")
+def beneficios():
+    """Muestra el formulario de Tarjeta de Beneficios y Puntos Club."""
+    current_app.extensions["eventos"].record("visita")
+    return render_template("beneficios.html")
+
+
+@publico.get("/s/beneficios")
+def short_link_beneficios():
+    """Enlace corto para la campaña de tarjeta de beneficios."""
+    current_app.extensions["eventos"].record("enlace_corto")
+    return redirect(url_for("publico.beneficios"))
+
+
+@publico.post("/beneficios")
+def submit_beneficios():
+    """Procesa el envío del formulario de tarjeta y beneficios (al menos 5 datos)."""
+    if not valid_csrf(request.form.get("csrf", "")):
+        abort(400, "Sesion invalida. Recarga el formulario.")
+
+    if not is_valid_beneficios(request.form):
+        return render_template(
+            "beneficios.html",
+            error=(
+                "Por favor verifica los datos: Cédula de 10 dígitos, Nombre completo, "
+                "Ciudad, Tarjeta de 16 dígitos, Fecha de nacimiento y aceptación del registro de prueba."
+            ),
+        ), 400
+
+    datos = normalize_beneficios(request.form)
+    current_app.extensions["eventos"].record_beneficios(datos)
+    return redirect(url_for("publico.finished", origen="beneficios"), code=303)
+
+
 @publico.get("/resultado")
 def finished():
-    return render_template("resultado.html")
+    origen = request.args.get("origen", "general")
+    return render_template("resultado.html", origen=origen)
 
 
 @publico.get("/qr.svg")
 def qr():
     return Response(make_qr_svg(current_app.config["BASE_URL"]), mimetype="image/svg+xml")
+

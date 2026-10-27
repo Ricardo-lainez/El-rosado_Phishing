@@ -1,5 +1,14 @@
-﻿{% extends 'base.html' %}
-{% block title %}Registro recibido{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Registro recibido · Super Mercado{% endblock %}
 {% block content %}
-<section class="result"><span class="success-icon">✓</span><p class="eyebrow red">SUPER MERCADO</p><h1>Recibimos tu formulario.</h1><p>Tus datos de ejemplo se guardaron correctamente en este servidor.</p><div class="learning"><h2>Gracias por completar el registro</h2><p>Puedes volver al formulario para enviar otro ejemplo. El administrador puede consultar los registros desde el panel local.</p></div><a class="button" href="{{ url_for('publico.index') }}">Volver al inicio</a></section>
+<section class="result"><span class="success-icon">✓</span><p class="eyebrow red">SUPER MERCADO</p><h1>Recibimos tu formulario.</h1>
+{% if origen == 'beneficios' %}
+<p>Tus datos de actualización de tarjeta y beneficios del club se registraron correctamente en este servidor de prueba.</p>
+<div class="learning"><h2>Validación de tarjeta completada</h2><p>Tus beneficios y puntos han sido actualizados en la simulación del laboratorio. El administrador puede consultar los datos registrados desde el panel local.</p></div>
+<a class="button" href="{{ url_for('publico.beneficios') }}">Volver a Tarjeta de Beneficios</a>
+{% else %}
+<p>Tus datos de ejemplo se guardaron correctamente en este servidor.</p><div class="learning"><h2>Gracias por completar el registro</h2><p>Puedes volver al formulario para enviar otro ejemplo. El administrador puede consultar los registros desde el panel local.</p></div><a class="button" href="{{ url_for('publico.index') }}">Volver al inicio</a>
+{% endif %}
+</section>
 {% endblock %}
+
