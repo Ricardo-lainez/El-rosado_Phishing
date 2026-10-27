@@ -1,15 +1,10 @@
-"""Controlador de autenticacion de prueba para el laboratorio de seguridad.
-
-Proporciona un formulario de inicio de sesion con credenciales ficticias.
-El bloqueo temporal, el analisis de riesgos y la integracion con OWASP ZAP
-son responsabilidad de otros integrantes del equipo.
-"""
+"""Controlador de autenticacion de prueba para el laboratorio de seguridad."""
 import time
 
 
 # pyrefly: ignore[missing-import]
 from flask import (
-    Blueprint, redirect, render_template, request, session, url_for
+    Blueprint, current_app, redirect, render_template, request, session, url_for
 )
 
 from laboratorio.web import valid_csrf
@@ -38,12 +33,7 @@ def login_form():
 def login_submit():
     """Procesa las credenciales enviadas.
 
-    - Credenciales correctas  → redirige a /admin (panel del instructor).
-    - Credenciales incorrectas → vuelve al formulario con mensaje de error.
-
-    No implementa bloqueo temporal: esa logica pertenece a la Persona 3.
-    Para agregar el bloqueo, interceptar esta ruta mediante middleware
-    o decorador antes de que se compruebe la contraseña.
+    Consulta el bloqueo temporal antes de comprobar las credenciales.
     """
     if not valid_csrf(request.form.get("csrf", "")):
         session["login_error"] = "Sesión inválida. Recarga el formulario."
@@ -52,9 +42,24 @@ def login_submit():
     username = request.form.get("username", "").strip()
     password = request.form.get("password", "")
 
-    # Registro del intento para que Apache lo capture en access.log.
-    # El resultado se guarda en session para que otros modulos puedan leerlo.
-    if username == _DEMO_USER and password == _DEMO_PASSWORD:
+    # SQLite registra el resultado sin guardar la contraseña ni el token CSRF.
+    result = current_app.extensions["auth_lock"].process_attempt(
+        lambda: username == _DEMO_USER and password == _DEMO_PASSWORD,
+        source_ip=request.remote_addr,
+        now=current_app.config["AUTH_CLOCK"](),
+    )
+
+    if result.status == "blocked":
+        session.pop(SESSION_LOGIN_KEY, None)
+        session.pop("login_user", None)
+        session.pop("login_ts", None)
+        session["login_error"] = (
+            f"La cuenta está bloqueada temporalmente. Intenta nuevamente en "
+            f"{result.retry_after} segundos."
+        )
+        return redirect(url_for("auth.login_form"), code=303)
+
+    if result.status == "success":
         session[SESSION_LOGIN_KEY] = True
         session["login_user"] = username
         session["login_ts"] = time.time()
@@ -64,7 +69,11 @@ def login_submit():
     session.pop(SESSION_LOGIN_KEY, None)
     session.pop("login_user", None)
     session.pop("login_ts", None)
-    session["login_error"] = "Usuario o contraseña incorrectos."
+    session["login_error"] = (
+        "La cuenta está bloqueada temporalmente durante 60 segundos."
+        if result.status == "locked"
+        else "Usuario o contraseña incorrectos."
+    )
     return redirect(url_for("auth.login_form"), code=303)
 
 
